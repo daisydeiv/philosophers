@@ -6,20 +6,11 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 16:54:59 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/02 20:44:29 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:03:45 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	handle_one(t_data *data)
-{
-	pthread_mutex_lock(&data->philos->l_fork->mutex);
-	print_fork(data->monitor, data->rules, data->philos->id);
-	smart_usleep(data->rules->time_to_die, data->rules->start_time, data->monitor);//mod
-	print_dead(data->monitor, data->rules, data->philos->id);
-	pthread_mutex_unlock(&data->philos->l_fork->mutex);
-}
 
 void	*monitor_routine(void *arg)
 {
@@ -34,28 +25,32 @@ void	*monitor_routine(void *arg)
 		full = 0;
 		while (i < monitor->rules->total_philos)
 		{
+			pthread_mutex_lock(&monitor->philos[i].meal_lock);//TEST
 			if ((get_time(monitor->rules->start_time) - monitor->philos[i].last_meal)
 			> monitor->rules->time_to_die)
 			{
-				// printf("monitor foresees death\n");//debug
+				pthread_mutex_unlock(&monitor->philos[i].meal_lock);//TEST/unlock if dead
 				print_dead(monitor, monitor->rules, monitor->philos[i].id);
 				return (NULL);
 			}
 			if (monitor->rules->meals_required != 0 && 
 				monitor->philos[i].meals_eaten >= monitor->rules->meals_required)
-			{
-				pthread_mutex_lock(&monitor->death_lock);//test
-				monitor->dead = 1;//test
-				pthread_mutex_unlock(&monitor->death_lock);//test
-				full++;//++ only if you're on the limit, so only if the philo is full
-			}
+				full++;//++ only if you're on the limit, so only if the philo is full/TEST
+			pthread_mutex_unlock(&monitor->philos[i].meal_lock);//TEST
 			i++;
 		}
 		if (monitor->rules->meals_required != 0 
 			&& full == monitor->rules->total_philos)
+		{
+			pthread_mutex_lock(&monitor->death_lock);//TEST
+			monitor->dead = 1;//TEST
+			pthread_mutex_unlock(&monitor->death_lock);//TEST
+			printf(MAGE"All philos have eaten\n"RES);//TEST
 			return (NULL);
+		}
 		usleep(20);//quick
 	}
+	printf("TEST\n");
 	return (NULL);
 }
 //notes: death flag is necessary to act upon the exit
@@ -63,69 +58,25 @@ void	*monitor_routine(void *arg)
 //don't forget a final printf
 //you'll have to win lines, babe
 
-bool	check_death_flag(t_monitor *monitor)
+void	*philo_routine(void *arg)
 {
-	bool	is_dead;
+	t_data	*data;
 
-	// printf("death flag check\n");//debug
-	pthread_mutex_lock(&monitor->death_lock);
-	// is_dead = monitor->dead;//dead is set to 1 if dead
-	if (monitor->dead == 1)
-		is_dead = true;
-	else
-		is_dead = false;
-	pthread_mutex_unlock(&monitor->death_lock);
-	return (is_dead);
+	data = (t_data *)arg;
+	while (!check_death_flag(data->philos->monitor))
+	{
+		fork_routine(data->philos, data->forks);
+		eat_routine(data->philos);
+		sleep_routine(data->philos);
+		think_routine(data->philos);
+		// if (check_death_flag(data->monitor))
+		// 	break ;
+	}
+	printf(">>philo %d exiting<<\n", data->philos->id);//debug
+	return (NULL);
 }
 
-// void	launch_simulation(t_philo *philos, t_monitor *monitor, t_rules *rules)//off for test
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < rules->total_philos)//++i?
-// 	{
-// 		pthread_create(&philos[i].p_thread, NULL, philo_routine, &philos[i]);
-// 		i++;
-// 	}
-// 	pthread_create(&monitor->m_thread, NULL, monitor_routine, monitor);
-// 	// pthread_join(monitor->m_thread, NULL);//here or here
-// 	i = 0;
-// 	while (i < rules->total_philos)//++i?
-// 	{
-// 		printf("test\n");//debug
-// 		//it never does a join, blocks here
-// 		pthread_join(philos[i].p_thread, NULL);
-// 		i++;
-// 	}
-// 	pthread_join(monitor->m_thread, NULL);//here or here
-// }
-
-// void	launch_simulation(t_data *data)//test
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < data->rules->total_philos)//++i?
-// 	{
-// 		pthread_create(&data->philos[i].p_thread, NULL, philo_routine, &data->philos[i]);
-// 		i++;
-// 	}
-// 	pthread_create(&data->monitor->m_thread, NULL, monitor_routine, data->monitor);
-// 	// pthread_join(data->monitor->m_thread, NULL);//here or here
-// 	i = 0;
-// 	while (i < data->rules->total_philos)//++i?
-// 	{
-// 		printf("test\n");//debug
-// 		//it never does a join, blocks here
-// 		pthread_join(data->philos[i].p_thread, NULL);
-// 		i++;
-// 	}
-// 	pthread_join(data->monitor->m_thread, NULL);//here or here
-// 	//free array after join
-// }
-
-void	launch_simulation(t_data *data_array, int total_philos)//other test
+void	launch_simulation(t_data *data_array, int total_philos)
 {
 	int	i;
 
@@ -140,13 +91,11 @@ void	launch_simulation(t_data *data_array, int total_philos)//other test
 	i = 0;
 	while (i < total_philos)//++i?
 	{
-		// printf("test\n");//debug
-		//it never does a join, blocks here
 		pthread_join(data_array[i].philos->p_thread, NULL);
 		i++;
 	}
 	// pthread_join(data_array->monitor->m_thread, NULL);//here or here
-	//free array after join
+	//free array here? naaaah?
 }
 
 bool	set_data_array(t_data *data)//other test

@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:07:47 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/02 20:21:04 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:59:50 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <stdlib.h>
 # include <limits.h>//for INT_MAX
 # include <pthread.h>
-// # include <time.h>
 # include <sys/time.h>//gettimeofday()
 // temp for prints
 # define GREE	"\033[0;32m"//green colour
@@ -60,6 +59,8 @@ typedef struct	s_philosophers
 	t_rules			*rules;
 	t_fork			*r_fork;//right fork
 	t_fork			*l_fork;//left fork
+	bool			has_left_fork;//add
+	bool			has_right_fork;//add
 
 	pthread_mutex_t	meal_lock;//personnal lock
 	pthread_mutex_t	*death_lock;//pointer to the shared lock
@@ -88,7 +89,6 @@ typedef struct	s_all_data
 	t_monitor	*monitor;
 }	t_data;
 
-
 // input parsing
 bool	is_num(char *str);
 long	ft_atol(const char *str);
@@ -101,8 +101,6 @@ void	init_monitor(t_monitor *monitor, t_rules *rules, t_philo *philos);
 void	init_philos(t_philo *philos, t_rules *rules, t_fork *forks, t_monitor *monitor);
 bool	alloc_init_all(t_data *data, char *av[], int nb_philos);
 
-//utils
-void	free_all(t_data *data);
 //time
 long	set_start_time(void);
 long	get_time(long start);
@@ -115,15 +113,23 @@ void	print_think(t_monitor *monitor, t_rules *rules, int id);
 void	print_dead(t_monitor *monitor, t_rules *rules, int id);
 
 //simulation
+//utils
 void	handle_one(t_data *data);
 bool	check_death_flag(t_monitor *monitor);
-bool	set_data_array(t_data *data);
-void	*philo_routine(void *arg);
-void	*monitor_routine(void *arg);
-void	launch_simulation(t_data *data_array, int total_philos);//other test
+void	release_forks(t_philo *philos);//add
+//philos' steps
+void	fork_routine(t_philo *philos, t_fork *forks);
+void	eat_routine(t_philo *philos);
+void	sleep_routine(t_philo *philos);
+void	think_routine(t_philo *philos);
 // simulation/process
-// void	launch_simulation(t_philo *philos, t_monitor *monitor, t_rules *rules);//off for test
-// void	launch_simulation(t_data *data);//test
+void	*monitor_routine(void *arg);
+void	*philo_routine(void *arg);
+void	launch_simulation(t_data *data_array, int total_philos);
+bool	set_data_array(t_data *data);
+
+//cleanup
+void	free_all(t_data *data);
 
 // temp/print statement
 void	colour_test_print();

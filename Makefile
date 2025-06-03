@@ -11,9 +11,9 @@ SRCDIR := srcs
 
 SRCS := main.c parsing.c \
 	init_structs.c philo_routine.c simulation.c \
-	utils.c cleanup.c \
+	simulation_utils.c cleanup.c \
 	time.c print.c\
-	test.c
+	# test.c
 
 OBJS := $(SRCS:%.c=$(OBJDIR)/%.o)
 

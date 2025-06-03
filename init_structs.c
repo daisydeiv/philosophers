@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 13:36:52 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/05/31 14:53:45 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:55:27 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	init_philos(t_philo *philos, t_rules *rules, t_fork *forks, t_monitor *moni
 		philos[i].last_meal = 0;//it was never, so 0;
 		philos[i].l_fork = &forks[i];
 		philos[i].r_fork = &forks[(i + rules->total_philos - 1) % rules->total_philos];
+		philos[i].has_left_fork = false;//add
+		philos[i].has_right_fork = false;//Add
 		pthread_mutex_init(&philos[i].meal_lock, NULL);//no malloc: each their own
 		philos[i].write_lock = &monitor->write_lock;//set in monitor
 		philos[i].death_lock = &monitor->death_lock;//set in monitor

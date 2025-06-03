@@ -6,11 +6,25 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 13:41:01 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/05/31 17:27:16 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:05:08 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	release_forks(t_philo *philos)
+{
+	if (philos->has_left_fork)
+	{
+		pthread_mutex_unlock(&philos->l_fork->mutex);
+		philos->has_left_fork = false;
+	}
+	if (philos->has_right_fork)
+	{
+		pthread_mutex_unlock(&philos->r_fork->mutex);
+		philos->has_right_fork = false;
+	}
+}
 
 void	free_forks(t_fork *forks, t_rules *rules)
 {

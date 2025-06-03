@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:21:55 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/02 19:21:31 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/03 11:47:59 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,9 @@ int	main(int ac, char *av[])
 		return (1);
 
 	temp_rules_print(data->rules, data->forks);//temp
-	if (nb_philos == 1)//temp
-		handle_one(data);//even more temp/in simulation.c
+	if (nb_philos == 1)
+		handle_one(data);
 	else
-		// launch_simulation(data->philos, data->monitor, data->rules);//off for test
-		// launch_simulation(data);//test
 		if (!set_data_array(data))//other test
 			return (1);//failed by malloc
 		// printf(MAGE"Work In Progress\n"RES);//debug
@@ -55,10 +53,8 @@ int	main(int ac, char *av[])
 	return (0);
 }
 
-
 /*
 NOTES: 
 since I use the t_data inside the main, when calling another struct, I have to pass by data->
 but, all the functions I create will use the other structs, no worries, babe
-
 */

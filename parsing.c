@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 13:52:42 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/05/31 13:59:00 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/03 11:32:31 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,3 @@ bool	parsing_args(int ac, char *av[], int *nb_philo)
 	}
 	return (true);
 }
-
