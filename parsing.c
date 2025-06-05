@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 13:52:42 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/03 15:03:43 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:54:25 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,12 @@ bool	parsing_args(int ac, char *av[], int *nb_philo)
 	while (i < ac)
 	{
 		if (!is_num(av[i]))
-			return (printf("Error: non-numeric argument for arg %d\n", i), false);
+			return (printf("Error: non-numeric argument for arg %d\n", i),
+				false);
 		value = ft_atol(av[i]);
 		if (value < 0)
 			return (printf("Error: invalid value for arg %d\n", i), false);
-		i++;//almost forgot, ALWAYS
+		i++;
 	}
 	return (true);
 }

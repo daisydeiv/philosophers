@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:21:55 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/03 11:47:59 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:53:22 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,18 @@ int	main(int ac, char *av[])
 	nb_philos = 0;
 	if (!parsing_args(ac, av, &nb_philos))
 		return (1);//if it returned 1, so if it's an error
-
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return(printf("malloc failed\n"), 1);
 	if (!alloc_init_all(data, av, nb_philos))
 		return (1);
-
 	temp_rules_print(data->rules, data->forks);//temp
 	if (nb_philos == 1)
 		handle_one(data);
 	else
 		if (!set_data_array(data))//other test
 			return (1);//failed by malloc
-		// printf(MAGE"Work In Progress\n"RES);//debug
 	free_all(data);
-	// colour_test_print();
 	return (0);
 }
 

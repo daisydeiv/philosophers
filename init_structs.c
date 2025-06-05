@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 13:36:52 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/05 18:01:46 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/05 19:26:46 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	init_forks(t_fork *forks, t_rules *rules)
 	while (i < rules->total_philos)
 	{
 		forks[i].id = i;
-		pthread_mutex_init(&forks[i].mutex, NULL);//no malloc to simplify the cleaning process
+		pthread_mutex_init(&forks[i].mutex, NULL);
 		i++;
 	}
 }
@@ -42,33 +42,35 @@ void	init_monitor(t_monitor *monitor, t_rules *rules, t_philo *philos)
 {
 	monitor->rules = rules;
 	monitor->philos = philos;
-	monitor->dead = 0;//for now, nobody's dead lol
-	pthread_mutex_init(&monitor->death_lock, NULL);//no malloc, will access it by adress through philos
-	pthread_mutex_init(&monitor->write_lock, NULL);//no malloc, will access it by adress through philos
+	monitor->dead = 0;
+	pthread_mutex_init(&monitor->death_lock, NULL);
+	pthread_mutex_init(&monitor->write_lock, NULL);
+	//no malloc, will access it by adress through philos
 }
 
-void	init_philos(t_philo *philos, t_rules *rules, t_fork *forks, t_monitor *monitor)
+void	init_philos(t_philo *philos, t_rules *rules,
+		t_fork *forks, t_monitor *monitor)
 {
 	int	i;
 
-	i = 0;//why not start at 1 directly? => because id - 1 is tricky
+	i = 0;
 	while (i < rules->total_philos)
 	{
 		philos[i].id = i + 1;
 		philos[i].rules = rules;
 		philos[i].monitor = monitor;
-		philos[i].meals_eaten = 0;//hasn't eaten just yet
-		philos[i].last_meal = 0;//it was never, so 0;
+		philos[i].meals_eaten = 0;
+		philos[i].last_meal = 0;
 		philos[i].l_fork = &forks[i];
 		if (i == rules->total_philos - 1)
 			philos[i].r_fork = &forks[0];
 		else
 			philos[i].r_fork = &forks[i + 1];
-		philos[i].has_left_fork = false;//add
-		philos[i].has_right_fork = false;//Add
-		pthread_mutex_init(&philos[i].meal_lock, NULL);//no malloc: each their own
-		philos[i].write_lock = &monitor->write_lock;//set in monitor
-		philos[i].death_lock = &monitor->death_lock;//set in monitor
+		philos[i].has_left_fork = false;
+		philos[i].has_right_fork = false;
+		pthread_mutex_init(&philos[i].meal_lock, NULL);
+		philos[i].write_lock = &monitor->write_lock;
+		philos[i].death_lock = &monitor->death_lock;
 		i++;
 	}
 }
@@ -80,7 +82,7 @@ bool	alloc_init_all(t_data *data, char *av[], int nb_philos)
 	data->monitor = malloc(sizeof(t_monitor));
 	data->philos = malloc(sizeof(t_philo) * nb_philos);
 	if (!data->rules || !data->forks || !data->monitor || !data->philos)
-		return(printf("malloc failed\n"), false);
+		return (printf("malloc failed\n"), false);
 	init_rules(data->rules, av, nb_philos);
 	init_forks(data->forks, data->rules);
 	init_monitor(data->monitor, data->rules, data->philos);

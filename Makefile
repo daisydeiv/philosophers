@@ -13,7 +13,6 @@ SRCS := main.c parsing.c \
 	init_structs.c philo_routine.c simulation.c \
 	simulation_utils.c cleanup.c \
 	time.c print.c\
-	# test.c
 
 OBJS := $(SRCS:%.c=$(OBJDIR)/%.o)
 
@@ -33,7 +32,7 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
-	@echo "🧹 Adios, philosophuckers 🧹"
+	@echo "🧹 Adios, philoso-fuckers 🧹"
 
 re: fclean all
 

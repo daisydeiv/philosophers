@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:07:47 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/05 17:54:56 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/05 19:14:07 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <stdlib.h>
-# include <limits.h>//for INT_MAX
+# include <limits.h>
 # include <pthread.h>
-# include <sys/time.h>//gettimeofday()
+# include <sys/time.h>
 // temp for prints
 # define GREE	"\033[0;32m"//green colour
 # define GOLD	"\033[0;33m"//gold colour
@@ -31,12 +31,12 @@
 //struct for the rules
 typedef struct s_rules
 {
-	int			total_philos;//comp
-	long		time_to_sleep;//time
-	long		time_to_eat;//time
-	long		time_to_die;//time
-	long		meals_required;//number of meals needed
-	long		start_time;//the start time stocked with get_time()
+	int			total_philos;
+	long		time_to_sleep;
+	long		time_to_eat;
+	long		time_to_die;
+	long		meals_required;
+	long		start_time;
 }	t_rules;
 
 //struct for the forks
@@ -46,42 +46,42 @@ typedef struct s_forks
 	pthread_mutex_t	mutex;
 }	t_fork;
 
-typedef struct 	s_monitor	t_monitor;
+typedef struct s_monitor	t_monitor;
 //structure readability
 
 //struct per philo
-typedef struct	s_philosophers
+typedef struct s_philosophers
 {
-	pthread_t		p_thread;//philo's thread
+	pthread_t		p_thread;
 	int				id;
-	int				meals_eaten;//track number of meals
-	long			last_meal;//time
+	int				meals_eaten;
+	long			last_meal;
 	t_rules			*rules;
-	t_fork			*r_fork;//right fork
-	t_fork			*l_fork;//left fork
-	bool			has_left_fork;//add
-	bool			has_right_fork;//add
+	t_fork			*r_fork;
+	t_fork			*l_fork;
+	bool			has_left_fork;
+	bool			has_right_fork;
 
-	pthread_mutex_t	meal_lock;//personnal lock
-	pthread_mutex_t	*death_lock;//pointer to the shared lock
-	pthread_mutex_t	*write_lock;//pointer to the shared lock
+	pthread_mutex_t	meal_lock;
+	pthread_mutex_t	*death_lock;
+	pthread_mutex_t	*write_lock;
 
-	t_monitor		*monitor;//supervises
+	t_monitor		*monitor;
 }	t_philo;
 
 //monitoring structure
-typedef struct 	s_monitor
+typedef struct s_monitor
 {
-	pthread_t			m_thread;//monitor's thread
-	t_philo				*philos;//an array, to loop other all of them with philos[i]
-	int					dead;//flag, accessible by each philo, protected by mutex
+	pthread_t			m_thread;
+	t_philo				*philos;
+	int					dead;
 	t_rules				*rules;
-	pthread_mutex_t		death_lock;//has to check who is dead to quit the program
+	pthread_mutex_t		death_lock;
 	pthread_mutex_t		write_lock;
 }	t_monitor;
 
 //centralized struct
-typedef struct	s_all_data
+typedef struct s_all_data
 {
 	t_rules		*rules;
 	t_fork		*forks;
@@ -98,7 +98,8 @@ bool	parsing_args(int ac, char *av[], int *nb_philo);
 void	init_rules(t_rules *rules, char **av, int nb_philos);
 void	init_forks(t_fork *forks, t_rules *rules);
 void	init_monitor(t_monitor *monitor, t_rules *rules, t_philo *philos);
-void	init_philos(t_philo *philos, t_rules *rules, t_fork *forks, t_monitor *monitor);
+void	init_philos(t_philo *philos, t_rules *rules,
+			t_fork *forks, t_monitor *monitor);
 bool	alloc_init_all(t_data *data, char *av[], int nb_philos);
 
 //time
@@ -116,7 +117,9 @@ void	print_dead(t_monitor *monitor, t_rules *rules, int id);
 //utils
 void	handle_one(t_data *data);
 bool	check_death_flag(t_monitor *monitor);
-void	release_forks(t_philo *philos);//add
+void	check_meals(t_monitor *monitor, int i, int *full);
+void	set_death_flag(t_monitor *monitor);
+bool	die_and_release(t_philo *philos);//test
 //philos' steps
 bool	fork_routine(t_philo *philos, t_fork *forks);
 void	eat_routine(t_philo *philos);
@@ -129,9 +132,10 @@ void	launch_simulation(t_data *data_array, int total_philos);
 bool	set_data_array(t_data *data);
 
 //cleanup
+void	release_forks(t_philo *philos);
 void	free_all(t_data *data);
 
 // temp/print statement
-void	colour_test_print();
+void	colour_test_print(void);
 
 #endif
