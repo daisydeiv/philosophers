@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 13:52:42 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/03 11:32:31 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:03:43 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ bool	parsing_args(int ac, char *av[], int *nb_philo)
 	if (ac != 5 && ac != 6)
 		return (printf("Error: wrong number of arguments\n"), false);
 	(*nb_philo) = (int)ft_atol(av[1]);
+	if ((int)(*nb_philo) < 1)
+		return (printf("Error: not enough philos\n"), false);
 	if ((int)(*nb_philo) > 200)
 		return (printf("Error: exceeded number of philos\n"), false);
 	i = 1;

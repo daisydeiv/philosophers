@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:07:47 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/03 13:59:50 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/05 17:54:56 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	handle_one(t_data *data);
 bool	check_death_flag(t_monitor *monitor);
 void	release_forks(t_philo *philos);//add
 //philos' steps
-void	fork_routine(t_philo *philos, t_fork *forks);
+bool	fork_routine(t_philo *philos, t_fork *forks);
 void	eat_routine(t_philo *philos);
 void	sleep_routine(t_philo *philos);
 void	think_routine(t_philo *philos);

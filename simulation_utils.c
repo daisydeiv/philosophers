@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:58:08 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/03 11:59:53 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:00:51 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	handle_one(t_data *data)
 {
 	pthread_mutex_lock(&data->philos->l_fork->mutex);
-	print_fork(data->monitor, data->rules, data->philos->id);
+	print_fork(data->monitor, data->rules, data->philos->id);//off
 	smart_usleep(data->rules->time_to_die, data->rules->start_time, data->monitor);//mod
 	print_dead(data->monitor, data->rules, data->philos->id);
 	pthread_mutex_unlock(&data->philos->l_fork->mutex);

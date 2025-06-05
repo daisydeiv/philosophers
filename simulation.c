@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 16:54:59 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/03 14:03:45 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/05 13:03:18 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	*monitor_routine(void *arg)
 		}
 		usleep(20);//quick
 	}
-	printf("TEST\n");
+	release_forks(monitor->philos);//test for CTRL+C
 	return (NULL);
 }
 //notes: death flag is necessary to act upon the exit
@@ -63,15 +63,34 @@ void	*philo_routine(void *arg)
 	t_data	*data;
 
 	data = (t_data *)arg;
+	if (data->philos->id % 2 == 0)
+	{
+		printf("Philo %d delaying start\n", data->philos->id);
+		usleep(data->philos->rules->time_to_eat * 1000 / 2);//test
+	}
 	while (!check_death_flag(data->philos->monitor))
 	{
-		fork_routine(data->philos, data->forks);
-		eat_routine(data->philos);
-		sleep_routine(data->philos);
-		think_routine(data->philos);
-		// if (check_death_flag(data->monitor))
-		// 	break ;
+		// printf("dead?\n");
+		// fork_routine(data->philos, data->forks);
+		// eat_routine(data->philos);
+		// sleep_routine(data->philos);
+		// think_routine(data->philos);
+		// // if (check_death_flag(data->monitor))
+		// // 	break ;
+		if (fork_routine(data->philos, data->forks))
+		{
+			eat_routine(data->philos);
+			sleep_routine(data->philos);
+			think_routine(data->philos);
+		}//test
+		else
+		{
+			sleep_routine(data->philos);
+			think_routine(data->philos);
+		}//test
 	}
+	// printf("__________________________________________\n");
+	// release_forks(data->philos);
 	printf(">>philo %d exiting<<\n", data->philos->id);//debug
 	return (NULL);
 }

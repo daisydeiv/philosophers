@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 13:36:52 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/03 13:55:27 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:01:46 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ void	init_philos(t_philo *philos, t_rules *rules, t_fork *forks, t_monitor *moni
 		philos[i].meals_eaten = 0;//hasn't eaten just yet
 		philos[i].last_meal = 0;//it was never, so 0;
 		philos[i].l_fork = &forks[i];
-		philos[i].r_fork = &forks[(i + rules->total_philos - 1) % rules->total_philos];
+		if (i == rules->total_philos - 1)
+			philos[i].r_fork = &forks[0];
+		else
+			philos[i].r_fork = &forks[i + 1];
 		philos[i].has_left_fork = false;//add
 		philos[i].has_right_fork = false;//Add
 		pthread_mutex_init(&philos[i].meal_lock, NULL);//no malloc: each their own

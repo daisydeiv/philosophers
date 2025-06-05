@@ -6,7 +6,7 @@
 /*   By: mle-brie <mle-brie@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 14:27:01 by mle-brie          #+#    #+#             */
-/*   Updated: 2025/06/02 20:19:22 by mle-brie         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:30:42 by mle-brie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,10 @@ void	smart_usleep(long duration, long start_time, t_monitor *monitor)
 			break ;
 		usleep(200);//because usleep is a bitch
 	}
+	// while (!check_death_flag(monitor))
+	// {
+	// 	if ((get_time(start_time) - current_start) >= duration)//if dead
+	// 		break ;
+	// 	usleep(200);//because usleep is a bitch
+	// }
 }
